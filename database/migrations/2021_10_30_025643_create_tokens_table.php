@@ -17,7 +17,7 @@ class CreateTokensTable extends Migration
             $table->id();
             $table->text("token");
             $table->string("userId");
-            $table->timestamp("expires");
+            $table->integer("expires");
             $table->string("type");
             $table->boolean("blacklisted")->default(false);
             $table->timestamp("createdAt");

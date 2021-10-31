@@ -23,7 +23,7 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $user = $this->userService->createUser($request->all());
+        $user = $this->userService->create($request->all());
 
         $response = response(["user" => $user], HttpCodes::HTTP_CREATED);
 
@@ -35,9 +35,9 @@ class AuthController extends Controller
         $params = $request->only(["email", "password"]);
 
         $user   = $this->authService->login($params["email"], $params["password"]);
-        $token  = $this->tokenService->generateAuthTokens($user);
+        $tokens  = $this->tokenService->generateAuthTokens($user);
 
-        return ["user" => $user, "tokens" => $token];
+        return ["user" => $user, "tokens" => $tokens];
     }
 
     public function logout(Request $request)

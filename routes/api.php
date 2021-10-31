@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RolesController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\JwtMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,8 +26,22 @@ Route::prefix("/v1")->group(function() {
     });
 
     Route::prefix("/users")->group(function(){
-        Route::get('/', [UserController::class, "getPaginate"]);
-        Route::post('/', [UserController::class, "createUser"]);
+        Route::middleware("jwt:users_paginate")->get('/', [UserController::class, "getPaginate"]);
+        Route::middleware("jwt:users_all")->get('/all', [UserController::class, "getAll"]);
+        Route::middleware("jwt:users_get_by_id")->get('/{id}', [UserController::class, "getById"]);
+        Route::middleware("jwt:users_get_by_email")->get('/by-email/{email}', [UserController::class, "getByEmail"]);
+        Route::middleware("jwt:users_create")->post('/', [UserController::class, "create"]);
+        Route::middleware("jwt:users_update")->put('/{id}', [UserController::class, "update"]);
+        Route::middleware("jwt:users_delete")->put('/{id}', [UserController::class, "delete"]);
+    });
+
+    Route::prefix("/roles")->group(function(){
+        Route::middleware("jwt:roles_paginate")->get('/', [RolesController::class, "getPaginate"]);
+        Route::middleware("jwt:roles_all")->get('/all', [RolesController::class, "getAll"]);
+        Route::middleware("jwt:roles_get_by_id")->get('/{id}', [RolesController::class, "getAll"]);
+        Route::middleware("jwt:roles_create")->post('/', [RolesController::class, "create"]);
+        Route::middleware("jwt:roles_update")->put('/{id}', [RolesController::class, "update"]);
+        Route::middleware("jwt:roles_delete")->delete('/{id}', [RolesController::class, "delete"]);
     });
 });
 

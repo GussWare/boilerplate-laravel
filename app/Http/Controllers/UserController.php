@@ -25,18 +25,18 @@ class UserController extends Controller
         return $result;
     }
 
-    public function getUsers()
+    public function getAll()
     {
-        $users  = $this->userService->getUsers();
+        $users  = $this->userService->getAll();
 
         $response = response(["users" => $users], HttpCodes::HTTP_OK);
 
         return $response;
     }
 
-    public function getUserById(int $id)
+    public function getById(int $id)
     {
-        $user = $this->userService->getUserById($id);
+        $user = $this->userService->getById($id);
 
         if($user) {
 
@@ -47,9 +47,9 @@ class UserController extends Controller
         return $response;
     }
 
-    public function getUserByEmail(string $email)
+    public function getByEmail(string $email)
     {
-        $user = $this->userService->getUserByEmail($email);
+        $user = $this->userService->getByEmail($email);
 
         if($user) {
 
@@ -60,27 +60,27 @@ class UserController extends Controller
         return $response;
     }
 
-    public function createUser(Request $request)
+    public function create(Request $request)
     {
-        $user = $this->userService->createUser($request->all());
+        $user = $this->userService->create($request->all());
 
         $response =  response(["user" => $user], HttpCodes::HTTP_CREATED);
 
         return $response;
     }
 
-    public function updateUser(int $id, Request $request)
+    public function update(int $id, Request $request)
     {
-        $user = $this->userService->updateUser($id, $request->all());
+        $user = $this->userService->update($id, $request->all());
 
         $response = response(["user" => $user], HttpCodes::HTTP_OK);
 
         return $response;
     }
 
-    public function deleteUser(int $id)
+    public function delete(int $id)
     {
-        $user = $this->userService->deleteUser($id);
+        $user = $this->userService->delete($id);
 
         $response = response(["user" => $user], HttpCodes::HTTP_OK);
 

@@ -17,7 +17,7 @@ class AuthService
 
     public function login(string $email, string $password)
     {
-        $user = $this->userService->getUserByEmail($email);
+        $user = $this->userService->getByEmail($email);
 
         if(! $user) {
             // TODO: Poner un throw error por favor
