@@ -3,13 +3,19 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use JWTAuth;
-use Exception;
 use Illuminate\Http\Request;
-use Tymon\JWTAuth\Http\Middleware\BaseMiddleware;
+use App\Services\Tokens\TokenService;
+use APp\Services\Users\UserService;
 
-class JwtMiddleware extends BaseMiddleware
+class JwtMiddleware
 {
+    private $tokenService;
+
+    public function __construct(TokenService $tokenService)
+    {
+        $this->tokenService = $tokenService;
+    }
+
     /**
      * Handle an incoming request.
      *
@@ -17,19 +23,32 @@ class JwtMiddleware extends BaseMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next, string $action)
     {
-        try {
-            $user = JWTAuth::parseToken()->authenticate();
-        } catch (Exception $e) {
-            if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException){
-                return response()->json(['status' => 'Token is Invalid']);
-            }else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException){
-                return response()->json(['status' => 'Token is Expired']);
-            }else{
-                return response()->json(['status' => 'Authorization Token not found']);
-            }
+        $authorization = $request->header('Authorization');
+
+        if(! $authorization) {
+            //TODO: Poner exeption
         }
+
+        $authExplode = explode(" ", $authorization);
+
+        $token = end($authExplode);
+
+        if(! $token) {
+            //TODO: Poner exeption
+        }
+
+        $validToken =  $this->tokenService->validateToken($token);
+
+        if(! $validToken) {
+            //TODO: Poner exeption
+        }
+
+
+
         return $next($request);
     }
+
+
 }
